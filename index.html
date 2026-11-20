@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4C | Lógica Matemática</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Mono&family=Inter:wght@400;600;700;800&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}
+:root{--red:#ff1744;--panel:#151515;--line:#303030}
+header{position:sticky;top:0;z-index:10;background:#0b0b0b;border-bottom:1px solid var(--line);padding:18px 6%;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{font-weight:900;letter-spacing:2px;font-size:15px}
+.logo span{color:var(--red)}
+nav{display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:#aaa;text-decoration:none;font:11px 'DM Mono';text-transform:uppercase}
+nav a:hover{color:var(--red)}
+.hero{min-height:590px;padding:120px 9%;position:relative;overflow:hidden;background:radial-gradient(ellipse at 80% 45%,#5b001b55,transparent 40%)}
+.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:50px 50px}
+.hero-content{position:relative;z-index:2}
+.tag{font:11px 'DM Mono';letter-spacing:2px;color:var(--red);margin-bottom:25px}
+h1{font:900 clamp(65px,10vw,125px)/.85 'Barlow Condensed';letter-spacing:-2px}
+h1 span,.section-title span,.closing span{color:var(--red)}
+.hero p.description{max-width:450px;color:#aaa;line-height:1.8;font-size:14px;margin-top:28px}
+.btn{display:inline-block;background:var(--red);color:white;text-decoration:none;padding:16px 23px;font:12px 'DM Mono';letter-spacing:1px;margin-top:30px;border:1px solid var(--red);cursor:pointer}
+.btn:hover{background:white;color:black}
+.hero-square{position:absolute;right:15%;top:28%;width:220px;height:220px;border:2px solid var(--red);transform:rotate(30deg);box-shadow:0 0 45px #ff174433}
+.hero-square:after{content:"";position:absolute;inset:25px;border:1px solid var(--red)}
+.section{padding:90px 9%}
+.section-title{font:800 clamp(35px,5vw,58px) 'Barlow Condensed';margin-bottom:12px}
+.sub{color:#888;font-size:12px;line-height:1.7;margin-bottom:35px}
+.tp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.tp-card{min-height:140px;text-align:left;padding:17px;background:linear-gradient(145deg,#1b1b1b,#101010);border:1px solid #333;color:white;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}
+.tp-card:hover{border-color:var(--red);transform:translateY(-5px);box-shadow:0 10px 25px #000}
+.tp-card small{font:10px 'DM Mono';color:#888;line-height:1.5}
+.tp-card strong{font:25px 'Barlow Condensed'}
+.tp-card .num{font:12px 'DM Mono';color:var(--red)}
+.tp-card.pending{border-style:dashed}
+.resources{background:#101010}
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.resource{padding:20px;background:#191919;border:1px solid #333;text-decoration:none;display:flex;gap:15px;align-items:center;transition:.2s}
+.resource:hover{border-color:var(--red);transform:translateY(-3px)}
+.resource-icon{background:#300b16;color:var(--red);padding:13px;font:12px 'DM Mono'}
+.resource b{font-size:13px}
+.resource small{display:block;color:#888;font-size:11px;margin-top:5px}
+.resource i{color:var(--red);margin-left:auto;font-style:normal}
+.hint{font:10px 'DM Mono';color:#777;margin-top:20px;line-height:1.7}
+.game-section{padding:90px 9%;background:radial-gradient(ellipse at center,#39001555,transparent 60%)}
+.game-layout{display:grid;grid-template-columns:320px 220px;justify-content:center;gap:20px}
+.game-box,.stat,.rules{background:#131313;border:1px solid #333;padding:15px}
+.game-top{display:flex;justify-content:space-between;color:#999;font:10px 'DM Mono';margin-bottom:12px}
+#game{width:100%;display:block;background:#080808;border:1px solid #333}
+.game-buttons{display:flex;gap:8px;margin-top:12px}
+.game-buttons button{flex:1;padding:13px;background:var(--red);color:white;border:0;font:11px 'DM Mono';cursor:pointer}
+.game-buttons button:hover{background:white;color:black}
+#pause{background:#222;border:1px solid #555}
+.game-side{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+.stat small,.rules small{display:block;color:#888;font:10px 'DM Mono';margin-bottom:8px}
+.stat strong{font:28px 'Barlow Condensed';color:var(--red)}
+.rules{grid-column:1/-1;color:#aaa;font-size:11px;line-height:2}
+.rules b{color:var(--red);font:11px 'DM Mono'}
+.touch{display:none;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+.touch button{background:#222;color:white;border:1px solid #444;padding:12px;font-size:18px}
+.quiz{max-width:600px;margin:25px auto;padding:25px;background:#1b1014;border:1px solid var(--red)}
+.quiz h3{font-size:17px;line-height:1.5;margin:15px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.answers button{background:#222;color:white;border:1px solid #444;padding:13px;text-align:left;cursor:pointer}
+.answers button:hover{border-color:var(--red)}
+#feedback{font:12px 'DM Mono';margin-top:15px;line-height:1.6}
+.closing{text-align:center;padding:120px 20px;background:radial-gradient(ellipse at center,#45001666,transparent 60%)}
+.closing h2{font:900 clamp(55px,8vw,100px)/.9 'Barlow Condensed'}
+.closing p{color:#999;margin-top:20px;font-size:13px}
+footer{padding:25px 6%;border-top:1px solid #292929;color:#666;display:flex;justify-content:space-between;font:10px 'DM Mono'}
+footer span:last-child{color:var(--red)}
+.modal{position:fixed;inset:0;background:#000d;z-index:30;display:grid;place-items:center;padding:15px}
+.modal[hidden],.quiz[hidden]{display:none}
+.modal-content{position:relative;width:min(650px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid var(--red);padding:30px}
+.close{position:absolute;right:15px;top:10px;background:none;border:0;color:#aaa;font-size:30px;cursor:pointer}
+.modal h2{font:800 45px 'Barlow Condensed';color:var(--red);margin-bottom:5px}
+.modal h3{font:12px 'DM Mono';color:var(--red);margin:20px 0 8px}
+.modal p,.modal li{font-size:13px;color:#bbb;line-height:1.8}
+.modal ul{padding-left:20px}
+.remember{background:#241018;border-left:3px solid var(--red);padding:15px;margin-top:20px}
+@media(max-width:900px){.tp-grid{grid-template-columns:repeat(3,1fr)}.resource-grid{grid-template-columns:repeat(2,1fr)}.hero-square{right:-50px;opacity:.3}}
+@media(max-width:600px){
+ header{flex-wrap:wrap}nav{width:100%;justify-content:space-between}
+ .hero{padding:100px 7%}.hero-square{right:-130px}
+ .section,.game-section{padding:70px 6%}
+ .tp-grid{grid-template-columns:repeat(2,1fr)}
+ .resource-grid{grid-template-columns:1fr}
+ .game-layout{grid-template-columns:minmax(0,340px)}
+ .touch{display:grid}
+ .answers{grid-template-columns:1fr}
+ footer{font-size:8px;gap:10px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">4C <span>AMADEO SABBATINI 246.</span></div>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#trabajos">TP</a>
+    <a href="#recursos">Enlaces</a>
+    <a href="#juego">Juego</a>
+  </nav>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="hero-square"></div>
+  <div class="hero-content">
+    <p class="tag">4C / PROGRAMACIÓN / 2026</p>
+    <h1>EL FUTURO<br>ES <span>CREATIVO.</span></h1>
+    <p class="description">
+      LÓGICA MATEMÁTICA. Un espacio para repasar,
+      practicar y reunir los trabajos de todo el año.
+    </p>
+    <a href="#trabajos" class="btn">EXPLORAR RESÚMENES ↗</a>
+  </div>
+</section>
+
+<section class="section" id="trabajos">
+  <p class="tag">01 / MATERIAL DE ESTUDIO</p>
+  <h2 class="section-title">TP DE <span>LÓGICA MATEMÁTICA.</span></h2>
+  <p class="sub">Tocá cada cuadrado para abrir el resumen, las actividades y los conceptos importantes.</p>
+  <div class="tp-grid" id="tpGrid"></div>
+</section>
+
+<section class="section resources" id="recursos">
+  <p class="tag">02 / BIBLIOTECA DIGITAL</p>
+  <h2 class="section-title">ENLACES Y <span>RECURSOS.</span></h2>
+  <p class="sub">Accesos a los materiales y herramientas de la materia.</p>
+  <div class="resource-grid">
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">PDF</span><span><b>Resumen general</b><small>Guía de TP y tareas</small></span><i>↗</i></a>
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">CL</span><span><b>Classroom</b><small>Consignas y entregas</small></span><i>↗</i></a>
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">GH</span><span><b>GitHub</b><small>Código y repositorio</small></span><i>↗</i></a>
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">WEB</span><span><b>Página publicada</b><small>Proyecto recuperatorio</small></span><i>↗</i></a>
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">PY</span><span><b>Google Colab</b><small>Prácticas de Python</small></span><i>↗</i></a>
+    <a class="resource" href="#" onclick="linkAlert(event)"><span class="resource-icon">DR</span><span><b>Carpeta de apuntes</b><small>Documentos y materiales</small></span><i>↗</i></a>
+  </div>
+  <p class="hint">Para agregar enlaces reales, reemplazá el # del atributo href de cada tarjeta por la dirección correspondiente.</p>
+</section>
+
+<section class="game-section" id="juego">
+  <p class="tag">03 / DESAFÍO INTERACTIVO</p>
+  <h2 class="section-title">LÓGICA <span>BLOCKS.</span></h2>
+  <p class="sub">Completá filas, sumá puntos y respondé preguntas de los temas vistos durante el año.</p>
+
+  <div class="game-layout">
+    <div class="game-box">
+      <div class="game-top"><span>4C ARCADE / 001</span><span id="status">LISTO</span></div>
+      <canvas id="game" width="300" height="600"></canvas>
+      <div class="game-buttons">
+        <button id="start">INICIAR JUEGO</button>
+        <button id="pause">PAUSAR</button>
+      </div>
+      <div class="touch">
+        <button data-action="left">←</button>
+        <button data-action="rotate">↻</button>
+        <button data-action="right">→</button>
+        <button data-action="down">↓</button>
+        <button data-action="drop">⇊</button>
+      </div>
+    </div>
+
+    <div class="game-side">
+      <div class="stat"><small>PUNTAJE</small><strong id="score">000000</strong></div>
+      <div class="stat"><small>FILAS</small><strong id="lines">00</strong></div>
+      <div class="stat"><small>NIVEL</small><strong id="level">01</strong></div>
+      <div class="stat"><small>RECORD</small><strong id="best">000000</strong></div>
+      <div class="rules">
+        <b>CONTROLES</b><br>
+        ← → Mover<br>
+        ↑ Girar<br>
+        ↓ Bajar<br>
+        ESPACIO Caída rápida<br>
+        P Pausar
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz" hidden>
+    <p class="tag">BONUS DE CONOCIMIENTO</p>
+    <h3 id="question"></h3>
+    <div class="answers" id="answers"></div>
+    <p id="feedback"></p>
+  </div>
+</section>
+
+<section class="closing">
+  <p class="tag">4C / FIN DEL RECORRIDO</p>
+  <h2>VALIÓ LA PENA<br><span>TODO ESTO.</span></h2>
+  <p>Aprender, equivocarse, volver a intentar y llegar hasta acá.</p>
+</section>
+
+<footer>
+  <span>© 2026 · 4C AMADEO SABBATINI 246</span>
+  <span>LÓGICA MATEMÁTICA ■</span>
+</footer>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-content">
+    <button class="close" id="close">×</button>
+    <p class="tag" id="modalTag"></p>
+    <h2 id="modalTitle"></h2>
+    <p id="modalSummary"></p>
+    <h3>¿QUÉ PIDE LA TAREA?</h3>
+    <ul id="modalTasks"></ul>
+    <div class="remember">
+      <h3>PARA RECORDAR</h3>
+      <p id="modalRemember"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// RESÚMENES DE LOS TRABAJOS PRÁCTICOS
+const tps = [
+{n:1,title:"Sistemas de numeración y conversión de datos",summary:"Estudia cómo se representan los números en decimal, binario, octal y hexadecimal. Las computadoras trabajan con bits, por eso es importante saber convertir entre bases.",tasks:["Explicar por qué hexadecimal simplifica la lectura de direcciones de memoria y qué representan las letras A–F.","Convertir números decimales a binario, octal y hexadecimal mediante divisiones sucesivas.","Pasar números binarios a decimal sumando potencias de 2.","Convertir entre binario, octal y hexadecimal agrupando bits: de 3 en 3 para octal y de 4 en 4 para hexadecimal.","Resolver el ejemplo de direcciones A7 y A8 en binario."],remember:"En divisiones sucesivas, los residuos se leen de abajo hacia arriba. En binario a decimal, cada posición vale una potencia de 2."},
+{n:2,title:"Aritmética lógica: suma y multiplicación binaria",summary:"Practica operaciones con números binarios, que solo utilizan 0 y 1. Se aplican acarreos en las sumas y productos parciales en las multiplicaciones.",tasks:["Resolver las sumas binarias alineando los números a la derecha.","Resolver multiplicaciones binarias, desplazando cada producto parcial una posición a la izquierda.","Elegir dos sumas y dos multiplicaciones y comprobarlas convirtiendo los números a decimal.","Mostrar el procedimiento completo, no solamente el resultado."],remember:"Suma básica: 0+0=0, 0+1=1, 1+1=10. Multiplicar por 0 da 0 y por 1 deja el mismo número."},
+{n:3,title:"Unidades de medida de la información",summary:"Explica cómo se mide la información digital y por qué la capacidad que muestra una computadora puede ser distinta de la anunciada por el fabricante.",tasks:["Definir bit y byte, y diferenciar las escalas decimal y binaria.","Convertir bits a bytes y entre KB, MB y GB usando 1024.","Calcular cuánto espacio muestra el sistema operativo en un dispositivo anunciado en GB.","Resolver cuántas carpetas entran en un disco y cuánto tarda una descarga según su velocidad."],remember:"1 byte = 8 bits. 1 KB = 1024 bytes; 1 MB = 1024 KB; 1 GB = 1024 MB."},
+{n:4,title:"Representación de la información: ASCII y Unicode",summary:"Estudia cómo una computadora representa letras, números y símbolos mediante códigos numéricos.",tasks:["Explicar qué hace la codificación de caracteres y cuáles eran los límites de ASCII.","Descifrar bytes binarios usando una tabla ASCII.","Convertir las primeras letras del nombre propio a binario de 8 bits.","Calcular cuántos bits ocupa una palabra según la codificación.","Relacionar los valores ASCII de mayúsculas y minúsculas y resolver una suma de caracteres."],remember:"ASCII básico utiliza 7 bits y representa 128 valores. Unicode permite representar caracteres de muchos idiomas y símbolos. UTF-8 usa entre 1 y 4 bytes."},
+{n:5,title:"Lógica proposicional",summary:"Introduce las proposiciones, sus valores de verdad y los conectores que permiten formar expresiones lógicas.",tasks:["Definir proposición, valor de verdad y simbolización con letras como p, q y r.","Explicar disyunción (O), conjunción (Y) y negación (NO), con sus tablas de verdad.","Relacionar los conectores con circuitos, operaciones binarias y conjuntos.","Diferenciar tautología, contradicción y contingencia."],remember:"Una proposición puede ser verdadera o falsa. La conjunción solo es verdadera si ambas lo son; la disyunción inclusiva es verdadera si al menos una lo es; la negación invierte el valor."},
+{n:6,title:"TP 06",summary:"Este trabajo práctico no aparece desarrollado en el PDF compartido.",tasks:[],remember:"Agregar el contenido cuando tengas la consigna original.",pending:true},
+{n:7,title:"Flashcards: lógica proposicional y conjuntos",summary:"Propone estudiar mediante tarjetas de pregunta y respuesta para memorizar conectores y sus representaciones.",tasks:["Crear tarjetas para condicional (si… entonces), bicondicional (si y solo si) y disyunción exclusiva (o… o).","En el frente colocar una pregunta, símbolo o diagrama; en el dorso, definición, tabla de verdad y operación equivalente.","Representar cada conector con diagramas de Venn.","Hacerlas en formato digital o físico."],remember:"Condicional: p → q. Bicondicional: p ↔ q. Disyunción exclusiva: p ⊕ q; es verdadera cuando exactamente una proposición es verdadera."},
+{n:8,title:"Hoja de ruta: resumen de la materia",summary:"Consiste en reunir en una sola carilla los conceptos principales vistos en los trabajos anteriores.",tasks:["Preparar una hoja visual con definiciones, símbolos lógicos, reglas de verdad y diagramas de Venn.","Puede hacerse a mano o digitalmente en Word, Docs o Canva.","Si es digital, exportar como PDF de una sola página y subirlo a Classroom."],remember:"La idea es sintetizar: usar títulos, cuadros y ejemplos breves sin amontonar información."},
+{n:9,title:"Teoría de conjuntos y leyes de De Morgan",summary:"Relaciona las leyes de De Morgan con las operaciones de conjuntos y con situaciones cotidianas.",tasks:["Resumir las demostraciones de las dos leyes a partir de los videos indicados.","Explicar cómo intervienen unión, intersección y complemento.","Crear cuatro ejemplos cotidianos: dos para cada ley, explicando el contexto y el razonamiento.","Presentar el trabajo en papel o digital y subirlo a Classroom."],remember:"El complemento de una unión equivale a la intersección de los complementos. El complemento de una intersección equivale a la unión de los complementos."},
+{n:10,title:"De Morgan en series, juegos y programación",summary:"Profundiza la aplicación práctica de las leyes de De Morgan para transformar condiciones lógicas.",tasks:["Hacer una síntesis breve de los dos videos.","Inventar cuatro situaciones nuevas: dos con la primera ley y dos con la segunda.","En cada ejemplo incluir contexto, expresión original negada, transformación paso a paso y explicación del resultado.","Elegir formato físico o digital y entregar en Classroom."],remember:"Al negar una expresión con Y, se cambia por O y se niegan sus partes; al negar una expresión con O, se cambia por Y y se niegan sus partes."},
+{n:11,title:"TP 11",summary:"Este trabajo práctico no aparece desarrollado en el PDF compartido.",tasks:[],remember:"Agregar el contenido cuando tengas la consigna original.",pending:true},
+{n:12,title:"Matrices y espacio 2D: escudo escolar",summary:"Pasa de los vectores de una dimensión a las matrices de dos dimensiones. Cada píxel del escudo se guarda como un número en una matriz 25×25.",tasks:["Cargar el archivo escudo.bmp y formar una matriz de 25 filas por 25 columnas.","Recorrer la matriz con dos ciclos for anidados: uno para filas y otro para columnas.","Imprimir el valor de cada píxel en una cuadrícula.","Si no hay computadora, escribir el pseudocódigo y dibujar la cuadrícula en papel."],remember:"Una matriz 25×25 tiene 625 posiciones. En escala de grises, 0 representa negro y 255 representa blanco."},
+{n:13,title:"Pixel Art y matrices bidimensionales",summary:"Pide crear dibujos pixelados y comprender que cada dibujo puede representarse como una matriz de píxeles.",tasks:["Crear 10 producciones: 5 a color y 5 en escala de grises.","Usar las dimensiones 16×16 y 25×25.","Incluir dos personajes, un vehículo, un diseño del colegio y uno representativo del curso.","Hacerlos con una aplicación de Pixel Art o en papel cuadriculado."],remember:"16×16 tiene 256 píxeles y 25×25 tiene 625. En escala de grises se pueden usar valores de 0 a 255."},
+{n:14,title:"De la matriz al código: Pixel Art en Python",summary:"Continúa el TP 13: las imágenes se cargan en Python y se convierten en matrices que el programa puede recorrer y mostrar.",tasks:["Revisar que los dibujos tengan tamaño correcto y estén guardados en PNG.","Usar la aplicación web indicada por el docente para generar vistas y código.","Cargar al menos cinco imágenes en Google Colab.","Mostrar matrices, imágenes y recorridos con dos for anidados; generar versiones BMP en color, grises y blanco y negro.","Agregar una reflexión sobre las diferencias entre matrices de color y de grises y compartir el notebook."],remember:"Color suele tener forma (N, N, 3), por los canales rojo, verde y azul. Grises tiene forma (N, N), porque cada píxel guarda un solo valor."},
+{n:15,title:"Creación de cuenta en GitHub",summary:"El objetivo es aprender a usar GitHub para alojar y compartir proyectos de programación.",tasks:["Entrar a github.com y crear una cuenta.","Completar correo, contraseña y nombre de usuario.","Verificar la cuenta desde el correo electrónico.","Enviar el enlace del perfil de GitHub por Classroom."],remember:"El enlace del perfil tiene la forma github.com/tu-usuario. No se debe compartir la contraseña."},
+{n:16,title:"Producto cartesiano, relaciones y funciones",summary:"Explica cómo se combinan elementos de conjuntos y cómo se relacionan datos de entrada con datos de salida.",tasks:["Crear un conjunto A con 5 elementos y un conjunto B con 3 elementos.","Escribir A×B con todas las parejas ordenadas y calcular su cantidad: 5×3=15.","Inventar una relación que no sea función y justificar por qué un elemento se relaciona con varios.","Crear una función donde cada entrada tenga una única salida e identificar variable independiente y dependiente.","Probar el producto cartesiano en Python con listas y explicar el resultado."],remember:"En una función, cada elemento del conjunto de partida tiene exactamente una imagen en el conjunto de llegada."},
+{n:17,title:"TP 17",summary:"Este trabajo práctico no aparece desarrollado en el PDF compartido.",tasks:[],remember:"Agregar el contenido cuando tengas la consigna original.",pending:true},
+{n:18,title:"TP 18",summary:"Este trabajo práctico no aparece desarrollado en el PDF compartido.",tasks:[],remember:"Agregar el contenido cuando tengas la consigna original.",pending:true}
+];
+
+const grid=document.getElementById("tpGrid");
+const modal=document.getElementById("modal");
+tps.forEach(tp=>{
+  const b=document.createElement("button");
+  b.className="tp-card"+(tp.pending?" pending":"");
+  b.innerHTML=`<span class="num">${String(tp.n).padStart(2,"0")} / TP</span><strong>TP ${String(tp.n).padStart(2,"0")}</strong><small>${tp.pending?"CONTENIDO PENDIENTE":tp.title}</small>`;
+  b.onclick=()=>openTP(tp);
+  grid.appendChild(b);
+});
+function openTP(tp){
+  document.getElementById("modalTag").textContent="TRABAJO PRÁCTICO / "+tp.n;
+  document.getElementById("modalTitle").textContent="TP "+String(tp.n).padStart(2,"0");
+  document.getElementById("modalSummary").textContent=tp.summary;
+  document.getElementById("modalRemember").textContent=tp.remember;
+  const ul=document.getElementById("modalTasks");
+  ul.innerHTML="";
+  tp.tasks.forEach(task=>{
+    const li=document.createElement("li");
+    li.textContent=task;
+    ul.appendChild(li);
+  });
+  if(tp.pending){
+    ul.innerHTML="<li>La consigna todavía no está disponible en el resumen recibido.</li>";
+  }
+  modal.hidden=false;
+}
+document.getElementById("close").onclick=()=>modal.hidden=true;
+modal.onclick=e=>{if(e.target===modal)modal.hidden=true};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")modal.hidden=true});
+function linkAlert(e){e.preventDefault();alert("Este enlace todavía no fue configurado. Reemplazá el # del href por la dirección real.");}
+
+// JUEGO LÓGICA BLOCKS
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+const C=30, W=10, H=20;
+const palette=[null,"#ff1744","#ff5575","#b9002b","#ff934f","#eeeeee","#9b3150","#db6680"];
+const shapes=[
+ [[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],
+ [[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],
+ [[1,1,0],[0,1,1]],[[0,1,1],[1,1,0]]
+];
+let board,active,score=0,lines=0,level=1,running=false,paused=false,last=0,dropTime=0,raf;
+const questions=[
+ ["¿Cuántos bits tiene un byte?",["4","8","16","32"],1,"Un byte equivale a 8 bits."],
+ ["¿Qué base utiliza el sistema binario?",["Base 2","Base 8","Base 10","Base 16"],0,"El sistema binario utiliza 0 y 1: base 2."],
+ ["¿Qué conector representa la operación Y?",["∨","¬","∧","→"],2,"La conjunción ∧ representa Y."],
+ ["¿Cuándo es verdadera la disyunción inclusiva?",["Cuando ambas son falsas","Cuando al menos una es verdadera","Nunca","Solo cuando ambas son verdaderas"],1,"Es verdadera si al menos una proposición es verdadera."],
+ ["¿Qué hace la negación?",["Duplica","Invierte el valor de verdad","Suma","Multiplica"],1,"La negación cambia verdadero por falso y falso por verdadero."],
+ ["¿Cuántos bits se agrupan para hexadecimal?",["2","3","4","8"],2,"Para hexadecimal se agrupan de 4 en 4."],
+ ["¿Qué hacen las leyes de De Morgan?",["Cambian Y por O y viceversa al negar","Convierten decimal a binario","Miden bytes","Crean matrices"],0,"Al negar, se intercambian Y/O y se niegan las partes."],
+ ["¿Cuántas posiciones tiene una matriz 25×25?",["50","125","625","2500"],2,"25 por 25 es 625 posiciones."],
+ ["¿Qué estructura tiene filas y columnas?",["Vector","Matriz","Variable","Condición"],1,"Una matriz organiza datos en dos dimensiones."],
+ ["¿Qué código representa caracteres?",["ASCII","Python","HTML","GitHub"],0,"ASCII asigna valores numéricos a caracteres."],
+ ["¿Qué plataforma permite alojar repositorios?",["Paint","GitHub","Calculadora","Word"],1,"GitHub permite alojar y compartir código."],
+ ["En una función, cada entrada tiene…",["Varias salidas","Exactamente una salida","Ninguna salida","Dos salidas"],1,"Cada elemento de partida tiene exactamente una imagen."],
+ ["¿Cuánto es 5 × 3?",["8","10","15","20"],2,"Cinco por tres es quince."],
+ ["¿Qué valor representa negro en la escala de grises del TP?",["0","100","255","1024"],0,"En esa escala, 0 es negro y 255 es blanco."]
+];
+let previousQuestion=-1;
+
+function emptyBoard(){return Array.from({length:H},()=>Array(W).fill(0))}
+function newPiece(){
+ const id=1+Math.floor(Math.random()*7);
+ return {id,m:shapes[id-1].map(r=>r.slice()),x:3,y:0};
+}
+function drawCell(x,y,id){
+ ctx.fillStyle=palette[id];
+ ctx.fillRect(x*C+1,y*C+1,C-2,C-2);
+ ctx.strokeStyle="#ffffff55";
+ ctx.strokeRect(x*C+1,y*C+1,C-2,C-2);
+}
+function draw(){
+ ctx.fillStyle="#080808";ctx.fillRect(0,0,300,600);
+ ctx.strokeStyle="#ffffff12";
+ for(let x=0;x<=W;x++){ctx.beginPath();ctx.moveTo(x*C,0);ctx.lineTo(x*C,600);ctx.stroke()}
+ for(let y=0;y<=H;y++){ctx.beginPath();ctx.moveTo(0,y*C);ctx.lineTo(300,y*C);ctx.stroke()}
+ board.forEach((row,y)=>row.forEach((v,x)=>{if(v)drawCell(x,y,v)}));
+ if(active)active.m.forEach((row,y)=>row.forEach((v,x)=>{if(v)drawCell(active.x+x,active.y+y,active.id)}));
+ if(!running||paused){
+  ctx.fillStyle="#000b";ctx.fillRect(0,0,300,600);
+  ctx.textAlign="center";ctx.fillStyle="#ff1744";ctx.font="bold 25px Arial";
+  ctx.fillText(paused?"PAUSA": "LÓGICA BLOCKS",150,285);
+  ctx.fillStyle="#ddd";ctx.font="12px monospace";
+  ctx.fillText(paused?"P PARA CONTINUAR":"PRESIONÁ INICIAR",150,315);
+ }
+}
+function collision(m,x,y){
+ for(let j=0;j<m.length;j++)for(let i=0;i<m[j].length;i++)if(m[j][i]){
+  const xx=x+i,yy=y+j;
+  if(xx<0||xx>=W||yy>=H||(yy>=0&&board[yy][xx]))return true;
+ }
+ return false;
+}
+function move(dx,dy){
+ if(!running||paused)return false;
+ if(!collision(active.m,active.x+dx,active.y+dy)){
+  active.x+=dx;active.y+=dy;return true;
+ }
+ return false;
+}
+function rotate(){
+ if(!running||paused)return;
+ const m=active.m[0].map((_,i)=>active.m.map(row=>row[i]).reverse());
+ if(!collision(m,active.x,active.y))active.m=m;
+}
+function lock(){
+ active.m.forEach((row,y)=>row.forEach((v,x)=>{
+  if(v&&active.y+y>=0)board[active.y+y][active.x+x]=active.id;
+ }));
+ clearLines();
+ active=newPiece();
+ if(collision(active.m,active.x,active.y)){
+  running=false;
+  document.getElementById("status").textContent="FIN DEL JUEGO";
+  draw();
+ }
+}
+function clearLines(){
+ let count=0;
+ for(let y=H-1;y>=0;y--){
+  if(board[y].every(v=>v!==0)){
+   board.splice(y,1);board.unshift(Array(W).fill(0));count++;y++;
+  }
+ }
+ if(count){
+  lines+=count;score+=([0,100,300,500,800][count]||800)*level;
+  level=1+Math.floor(lines/8);
+  updateStats();showQuestion();
+ }
+}
+function updateStats(){
+ document.getElementById("score").textContent=String(score).padStart(6,"0");
+ document.getElementById("lines").textContent=String(lines).padStart(2,"0");
+ document.getElementById("level").textContent=String(level).padStart(2,"0");
+}
+function startGame(){
+ cancelAnimationFrame(raf);
+ board=emptyBoard();active=newPiece();score=0;lines=0;level=1;
+ running=true;paused=false;last=0;dropTime=0;
+ document.getElementById("status").textContent="EN JUEGO";
+ document.getElementById("start").textContent="REINICIAR";
+ document.getElementById("quiz").hidden=true;
+ updateStats();raf=requestAnimationFrame(loop);
+}
+function loop(time){
+ if(!running)return;
+ const delta=time-last;last=time;
+ if(!paused){
+  dropTime+=delta;
+  if(dropTime>Math.max(100,700-(level-1)*50)){
+   if(!move(0,1))lock();
+   dropTime=0;
+  }
+ }
+ draw();
+ raf=requestAnimationFrame(loop);
+}
+function togglePause(){
+ if(!running)return;
+ paused=!paused;
+ document.getElementById("status").textContent=paused?"PAUSADO":"EN JUEGO";
+ document.getElementById("pause").textContent=paused?"CONTINUAR":"PAUSAR";
+ draw();
+}
+function hardDrop(){
+ if(!running||paused)return;
+ while(move(0,1))score++;
+ lock();updateStats();
+}
+function showQuestion(){
+ paused=true;
+ document.getElementById("status").textContent="PREGUNTA";
+ let index=Math.floor(Math.random()*questions.length);
+ if(index===previousQuestion)index=(index+1)%questions.length;
+ previousQuestion=index;
+ const q=questions[index];
+ document.getElementById("question").textContent=q[0];
+ const answers=document.getElementById("answers");
+ const feedback=document.getElementById("feedback");
+ answers.innerHTML="";feedback.textContent="";
+ q[1].forEach((answer,i)=>{
+  const b=document.createElement("button");
+  b.textContent=String.fromCharCode(65+i)+". "+answer;
+  b.onclick=()=>{
+   [...answers.children].forEach(x=>x.disabled=true);
+   if(i===q[2]){
+    score+=150;feedback.textContent="¡CORRECTO! +150 PUNTOS. "+q[3];feedback.style.color="#7dffb0";
+   }else{
+    feedback.textContent="CASI. "+q[3];feedback.style.color="#ff7890";
+   }
+   updateStats();
+   setTimeout(()=>{
+    document.getElementById("quiz").hidden=true;
+    paused=false;document.getElementById("status").textContent="EN JUEGO";
+   },2200);
+  };
+  answers.appendChild(b);
+ });
+ document.getElementById("quiz").hidden=false;
+}
+document.getElementById("start").onclick=startGame;
+document.getElementById("pause").onclick=togglePause;
+document.addEventListener("keydown",e=>{
+ if(["ArrowLeft","ArrowRight","ArrowDown","ArrowUp"," "].includes(e.key))e.preventDefault();
+ if(e.key==="ArrowLeft")move(-1,0);
+ if(e.key==="ArrowRight")move(1,0);
+ if(e.key==="ArrowDown"){if(move(0,1)){score++;updateStats()}}
+ if(e.key==="ArrowUp")rotate();
+ if(e.key===" ")hardDrop();
+ if(e.key.toLowerCase()==="p")togglePause();
+});
+document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{
+ const a=b.dataset.action;
+ if(a==="left")move(-1,0);
+ if(a==="right")move(1,0);
+ if(a==="down"){if(move(0,1)){score++;updateStats()}}
+ if(a==="rotate")rotate();
+ if(a==="drop")hardDrop();
+});
+board=emptyBoard();draw();updateStats();
+</script>
+</body>
+</html>
